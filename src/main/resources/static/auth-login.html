@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .login-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .login-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        .google-btn {
+            background: #db4437;
+            color: white;
+        }
+        .facebook-btn {
+            background: #3b5998;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <h2>自定义登录界面 && 登录端点</h2>
+    <!-- 自有用户登录 -->
+    <form action="/authorization/login-form" method="post">
+        <input type="text" name="username" placeholder="用户名" required/>
+        <input type="password" name="password" placeholder="密码" required/>
+        <button type="submit" class="login-btn">登录</button>
+    </form>
+
+    <hr/>
+
+    <!-- Google 登录 -->
+    <form action="/drama-portal-core/oauth2/authorization/google" method="get">
+        <button type="submit" class="google-btn">使用 Google 登录</button>
+    </form>
+
+    <!-- Facebook 登录 -->
+    <form action="/drama-portal-core/oauth2/authorization/facebook" method="get">
+        <button type="submit" class="facebook-btn">使用 Facebook 登录</button>
+    </form>
+
+    <!-- 登出按钮 -->
+    <form method="post" action="/drama-portal-core/auth/logout">
+        <button type="submit">登出</button>
+    </form>
+
+</div>
+</body>
+</html>

@@ -43,4 +43,27 @@ public class UserService implements UserDetailsService  {
         User user = new User(username, password, true, true, true,true, AuthorityUtils.commaSeparatedStringToAuthorityList("role"));
         return user;
     }
+
+    /**
+     * 查询用户
+     * @param username
+     * @return
+     */
+    public UserDetails findByUsername(String username){
+        if (username == "admin"){
+            return User.withUsername("admin").password("123456").roles("admin_role").build();
+        }
+        return null;
+    }
+
+    /**
+     * 创建用户
+     * @param username
+     * @param password
+     */
+    public void createUser(String username, String password){
+        logger.info("UserService.createUser username {} password {}", username, passwordEncoder.encode(password));
+    }
+
+
 }
