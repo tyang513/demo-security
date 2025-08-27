@@ -74,18 +74,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/auth-login.html", "/authorization/login-form").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                    .formLogin().loginPage("/auth-login.html")
+                    .formLogin()
+                    .loginPage("/auth-login.html")
+                .and()
+                    .oauth2Login().loginPage("/auth-login.html")
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService).and()
                 .and()
                     .logout()
                     .logoutUrl("/logout") // 指定登出URL，默认就是 /logout
                     .logoutSuccessUrl("/auth-login.html") // 登出成功后重定向的页面
                     .invalidateHttpSession(true) // 销毁session
                     .deleteCookies("JSESSIONID") // 删除cookie
-                    .permitAll() // 允许所有用户访问登出URL
-                .and()
-                    .oauth2Login().loginPage("/auth-login.html")
-                    .userInfoEndpoint()
-                    .userService(oAuth2UserService);
+                    .permitAll(); // 允许所有用户访问登出URL;
 
     }
 
