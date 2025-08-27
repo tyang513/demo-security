@@ -1,6 +1,8 @@
 package com.demo.security;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -75,12 +77,14 @@ public class AuthorizationController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return "redirect:/auth-login.html?error=" + e.getMessage();
+            String encodedError = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8.toString());
+            return "redirect:/auth-login.html?error=" + encodedError;
         }
     }
 
     @RequestMapping(value = "/oauth2/github")
     public String oauth2Github(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        logger.info("authorization.oauth2Github");
         return null;
     }
 }

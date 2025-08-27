@@ -66,4 +66,7 @@ public class UserService implements UserDetailsService  {
     }
 
 
+    public User findBySocialIdAndProvider(String socialId, String registrationId) {
+        return null;
+    }
 }

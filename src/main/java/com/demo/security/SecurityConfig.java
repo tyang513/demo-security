@@ -1,5 +1,8 @@
 package com.demo.security;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new CustomPasswordEncoder();
     }
+
+    @Autowired
+    private OAuth2UserService oAuth2UserService;
 
 
     @Override
@@ -62,16 +68,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .defaultSuccessUrl("/home.html", false).and().logout().permitAll();
 
 
-        /*--------------------------------------- 自定义页面 && 自定义登录端点 ---------------------------------------*/
+        /*--------------------------------------- 自定义页面 && 自定义登录端点 && OAuth2 登录 ---------------------------------------*/
         http.csrf().disable().authorizeRequests()
                 // 开放登录页面 & OAuth2 登录入口 & 静态资源入口
                 .antMatchers("/", "/auth-login.html", "/authorization/login-form").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                    .formLogin()
-                    .loginPage("/auth-login.html")
-                .and().
-                    logout().permitAll();
+                    .formLogin().loginPage("/auth-login.html")
+                .and()
+                    .logout()
+                    .logoutUrl("/logout") // 指定登出URL，默认就是 /logout
+                    .logoutSuccessUrl("/auth-login.html") // 登出成功后重定向的页面
+                    .invalidateHttpSession(true) // 销毁session
+                    .deleteCookies("JSESSIONID") // 删除cookie
+                    .permitAll() // 允许所有用户访问登出URL
+                .and()
+                    .oauth2Login().loginPage("/auth-login.html")
+                    .userInfoEndpoint()
+                    .userService(oAuth2UserService);
 
     }
 
@@ -101,4 +115,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public HttpSessionRequestCache requestCache() {
         return new HttpSessionRequestCache();
     }
+
+    @Bean
+    public List<UserInfoExtractor> createUserInfoExtractors(){
+        List<UserInfoExtractor> list = new ArrayList<>();
+        list.add(new GitHubUserInfoExtractor());
+        return list;
+    }
+
 }
